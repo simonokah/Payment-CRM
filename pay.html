@@ -10,27 +10,32 @@
     <button id="payBtn">Pay Now</button>
 
     <script>
+        // Extract email and amount from the URL
         const params = new URLSearchParams(window.location.search);
         const email = params.get("email");
         const amount = params.get("amount");
 
+        // Display email and amount on the page
         document.getElementById("email").textContent = email;
         document.getElementById("amount").textContent = amount;
 
+        // Event listener for the "Pay Now" button
         document.getElementById("payBtn").addEventListener("click", function() {
-            fetch("https://url.com/initiate-payment", {
+            // Send the payment data to the Azure Function API
+            fetch("https://payment-crm-func.azurewebsites.net/api/initiate-payment", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     email: email,
-                    amount: parseFloat(amount) * 100 // convert to kobo
+                    amount: parseFloat(amount) * 100 // Convert to kobo (if Paystack expects kobo)
                 })
             })
-            .then(response => response.json())
+            .then(response => response.json()) // Parse JSON response from the backend
             .then(data => {
                 if (data.status) {
+                    // Redirect the customer to the Paystack payment page
                     window.location.href = data.data.authorization_url;
                 } else {
                     alert("Failed to generate payment link.");
