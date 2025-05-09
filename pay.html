@@ -27,22 +27,16 @@
 
         // Event listener for the "Pay Now" button
         payBtn.addEventListener("click", function () {
-            const myHeaders = new Headers();
-        myHeaders.append("Authorization", "Bearer sk_test_00d2224bee46497d2103d10892c6b6e8b499f260");
-        myHeaders.append("Content-Type", "application/json");
-  
-        const raw = JSON.stringify({
-            "email": email,
-            "amount": parseFloat(amount) * 100 // Paystack uses kobo
-        });
-  
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow"
-        };
-            fetch("https://api.paystack.co/transaction/initialize", requestOptions)
+            fetch("https://payment-crm-func.azurewebsites.net/api/initiate-payment?", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    amount: parseFloat(amount) * 100 // Paystack uses kobo
+                })
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.status && data.data && data.data.authorization_url) {
