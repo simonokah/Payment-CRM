@@ -27,7 +27,7 @@
 
         // Event listener for the "Pay Now" button
         payBtn.addEventListener("click", function () {
-            fetch("https://payment-crm-func.azurewebsites.net/api/initiate-payment", {
+            fetch("https://api.paystack.co/transaction/initialize", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
